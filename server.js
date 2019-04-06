@@ -1,13 +1,13 @@
-var express = require('express');
-var app = express();
-var mysql = require('mysql');
-var morgan = require('morgan');
-var bodyParser = require('body-parser');
-var methodOverride = require('method-override');
+let express = require('express');
+let app = express();
+let mysql = require('mysql');
+let morgan = require('morgan');
+let bodyParser = require('body-parser');
+let methodOverride = require('method-override');
 
 const PORT = 8080;
 
-var connection = mysql.createConnection({
+let connection = mysql.createConnection({
     host : 'localhost',
     user : 'vosUser',
     password : 'vosMysql!1',
