@@ -18,9 +18,149 @@ CREATE TABLE IF NOT EXISTS LIBRARIAN_PHONE (
 
 CREATE TABLE IF NOT EXISTS LIBRARIAN_EMAIL (
     L_Email VARCHAR(50) NOT NULL,
-    L_Tab num CHAR(10) NOT NULL,
+    L_Tab_num CHAR(10) NOT NULL,
     PRIMARY KEY(L_Email),
     FOREIGN KEY(L_Tab_num)
         REFERENCES LIBRARIAN(Tab_num)
         ON DELETE CASCADE
+        ON UPDATE NO ACTION
+);
+
+CREATE TABLE IF NOT EXISTS DEPARTMENT (
+    Dep_name CHAR(20) NOT NULL,
+    L_Tab_num CHAR(10) NULL,
+    PRIMARY KEY(Dep_name),
+    FOREIGN KEY(L_Tab_num)
+        REFERENCES LIBRARIAN(Tab_num)
+        ON DELETE SET NULL
+        ON UPDATE NO ACTION
+);
+
+CREATE TABLE IF NOT EXISTS CATEGORY (
+    Category_name VARCHAR(50) NOT NULL,
+    PRIMARY KEY(Category_name)
+);
+
+CREATE TABLE IF NOT EXISTS READER (
+    Reg_number CHAR(10) NOT NULL,
+    R_birth_date DATE NOT NULL,
+    Age_group VARCHAR(20) NOT NULL,
+    R_Surname VARCHAR(40) NOT NULL,
+    R_Name VARCHAR(30) NOT NULL,
+    R_Middle_name VARCHAR(30) NULL,
+    L_Tab_num CHAR(10) NULL,
+    Reg_date DATE NOT NULL,
+    PRIMARY KEY(Reg_number),
+    FOREIGN KEY(L_Tab_num)
+        REFERENCES LIBRARIAN(Tab_num)
+        ON DELETE SET NULL
+        ON UPDATE NO ACTION
+);
+
+CREATE TABLE IF NOT EXISTS READER_PHONE (
+    R_Phone_num VARCHAR(20) NOT NULL,
+    R_Reg_num CHAR(10) NOT NULL,
+    PRIMARY KEY(R_Phone_num),
+    FOREIGN KEY(R_Reg_num)
+        REFERENCES READER(Reg_number)
+        ON DELETE CASCADE
+        ON UPDATE NO ACTION
+);
+
+CREATE TABLE IF NOT EXISTS READER_EMAIL (
+    R_Email VARCHAR(50) NOT NULL,
+    R_Reg_num CHAR(10) NOT NULL,
+    PRIMARY KEY(R_Email),
+    FOREIGN KEY(R_Reg_num)
+        REFERENCES READER(Reg_number)
+        ON DELETE CASCADE
+        ON UPDATE NO ACTION
+);
+
+CREATE TABLE IF NOT EXISTS LOGBOOK (
+    Logbook_code CHAR(10) NOT NULL,
+    Lb_year DATE NOT NULL,
+    R_Reg_num CHAR(10) NOT NULL,
+    PRIMARY KEY(Logbook_code),
+    FOREIGN KEY(R_Reg_num)
+        REFERENCES READER(Reg_number)
+        ON DELETE CASCADE
+        ON UPDATE NO ACTION
+);
+
+CREATE TABLE IF NOT EXISTS BOOK (
+    UDK_cypher VARCHAR(40) NOT NULL,
+    BBK_cypher VARCHAR(40) NOT NULL,
+    Book_name VARCHAR(128) NOT NULL,
+    C_Category_name VARCHAR(50) NOT NULL,
+    PRIMARY KEY(UDK_cypher),
+    UNIQUE KEY(BBK_cypher),
+    FOREIGN KEY(C_Category_name)
+        REFERENCES CATEGORY(Category_name)
+        ON DELETE NO ACTION
+        ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS AUTHOR (
+    A_code CHAR(10) NOT NULL,
+    A_name VARCHAR(100) NOT NULL,
+    A_birth_date DATE NULL,
+    Auth_nickname VARCHAR(50) NULL,
+    PRIMARY KEY(A_code)
+);
+
+CREATE TABLE IF NOT EXISTS BOOK_INSTANCE (
+    Inv_num CHAR(10) NOT NULL,
+    Publ_year DATE NOT NULL,
+    Language VARCHAR(20) NOT NULL,
+    R_Reg_num CHAR(10) NULL,
+    Booking_expires DATE NULL,
+    Is_available BOOLEAN NOT NULL,
+    B_UDK_cypher VARCHAR(40) NOT NULL,
+    D_Dep_name CHAR(20) NOT NULL,
+    D_place CHAR(10) NOT NULL,
+    PRIMARY KEY(Inv_num),
+    FOREIGN KEY(R_Reg_num)
+        REFERENCES READER(Reg_number)
+        ON DELETE SET NULL
+        ON UPDATE NO ACTION,
+    FOREIGN KEY(B_UDK_cypher)
+        REFERENCES BOOK(UDK_cypher)
+        ON DELETE NO ACTION
+        ON UPDATE NO ACTION,
+    FOREIGN KEY(D_Dep_name)
+        REFERENCES DEPARTMENT(Dep_name)
+        ON DELETE NO ACTION
+        ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS BOOK_INSTANCE_TO_LOGBOOK (
+    L_Logbook_code CHAR(10) NOT NULL,
+    B_Inv_number CHAR(10) NOT NULL,
+    Date_taken DATE NOT NULL,
+    Date_to_return DATE NULL,
+    Booking_time INTEGER NOT NULL,
+    PRIMARY KEY(L_Logbook_code,B_Inv_number),
+    FOREIGN KEY(L_Logbook_code)
+        REFERENCES LOGBOOK(Logbook_code)
+        ON DELETE CASCADE
+        ON UPDATE NO ACTION,
+    FOREIGN KEY(B_Inv_number)
+        REFERENCES BOOK_INSTANCE(Inv_num)
+        ON DELETE CASCADE
+        ON UPDATE NO ACTION
+);
+
+CREATE TABLE IF NOT EXISTS AUTHOR_TO_BOOK (
+    A_Auth_code CHAR(10) NOT NULL,
+    B_UDK_cypher VARCHAR(40) NOT NULL,
+    PRIMARY KEY(A_Auth_code, B_UDK_cypher),
+    FOREIGN KEY(A_Auth_code)
+        REFERENCES AUTHOR(A_code)
+        ON DELETE NO ACTION
+        ON UPDATE NO ACTION,
+    FOREIGN KEY(B_UDK_cypher)
+        REFERENCES BOOK(UDK_cypher)
+        ON DELETE CASCADE
+        ON UPDATE NO ACTION
 );
