@@ -26,7 +26,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.json({ type : 'application/vnd.api+json' }));
 app.use(methodOverride());
 
-require('./app/routes')(app);
+require('./app/routes')(app, databaseConnection);
 
 // ========== Launch server ==========
 app.listen(PORT);

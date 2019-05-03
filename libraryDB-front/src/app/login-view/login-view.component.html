@@ -1,0 +1,12 @@
+<form class="loginFormContainer" [formGroup]="options">
+
+  <mat-form-field class="libTheme">
+    <input matInput placeholder="Введіть код бібліотекаря" required>
+  </mat-form-field>
+<br/>
+  <mat-form-field class="libTheme">
+    <input matInput placeholder="Введіть пароль" [type]="hidePassword ? 'password' : 'text'">
+    <mat-icon matSuffix (click)="hidePassword = !hidePassword">{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+  </mat-form-field>
+
+</form>

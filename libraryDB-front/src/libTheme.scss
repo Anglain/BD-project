@@ -1,0 +1,17 @@
+@import '~@angular/material/theming';
+
+@include mat-core();
+
+$lib-theme-primary: mat-palette($mat-orange, 700, 200, 900);
+$lib-theme-accent: mat-palette($mat-light-blue);
+$lib-theme-warn: mat-palette($mat-red, A200);
+
+$lib-theme: mat-light-theme (
+  $lib-theme-primary,
+  $lib-theme-accent,
+  $lib-theme-warn
+);
+
+.libTheme {
+  @include angular-material-theme($lib-theme);
+}
